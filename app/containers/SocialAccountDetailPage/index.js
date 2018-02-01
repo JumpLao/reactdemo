@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import _ from 'lodash';
+import moment from 'moment';
 import { Card, Row, Col } from 'antd';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
@@ -29,7 +30,12 @@ export class SocialAccountDetailPage extends React.PureComponent { // eslint-dis
         where: {
           name,
         },
-        order: 'date DESC',
+        include: {
+          relation: 'socialPosts',
+          scope: {
+            order: 'date DESC',
+          },
+        },
       }),
     };
     this.props.dispatch(listSocialPostRequest(query));
@@ -45,6 +51,7 @@ export class SocialAccountDetailPage extends React.PureComponent { // eslint-dis
                 hoverable
                 cover={socialPost.picture && (<img alt="example" src={socialPost.picture} />)}
               >
+                {moment(socialPost.date).fromNow()}
                 <Meta
                   title={socialPost.name}
                   description={socialPost.message}
