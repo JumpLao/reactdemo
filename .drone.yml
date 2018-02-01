@@ -1,6 +1,9 @@
 pipeline:
   test:
     image: node:8-alpine
+    environment:
+      - NODE_ENV=production
+      - API_URL=http://api.socialcrawler.jumpso.cool/api
     commands:
       - npm install
       - npm run build

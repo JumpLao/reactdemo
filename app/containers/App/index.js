@@ -12,35 +12,50 @@
  */
 
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
-import { Layout, Menu } from 'antd';
-import HomePage from 'containers/HomePage/Loadable';
+import { Switch, Route, Link } from 'react-router-dom';
+import { Layout, Menu, Breadcrumb } from 'antd';
+import SocialAccountListPage from 'containers/SocialAccountListPage/Loadable';
+import SocialAccountDetailPage from 'containers/SocialAccountDetailPage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 const { Header, Footer, Content } = Layout;
 const { Item: MenuItem } = Menu;
+const { Item: BreadcrumbItem } = Breadcrumb;
 export default function App() {
   return (
-    <div>
+    <Layout style={{ height: '100vh' }}>
       <Header>
         <div className="logo" />
         <Menu
           theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={['2']}
+          defaultSelectedKeys={['1']}
           style={{ lineHeight: '64px' }}
         >
-          <MenuItem key="1">nav 1</MenuItem>
-          <MenuItem key="2">nav 2</MenuItem>
-          <MenuItem key="3">nav 3</MenuItem>
+          <MenuItem key="1">Home</MenuItem>
         </Menu>
       </Header>
-      <Content>
+      <Content style={{ padding: 20 }}>
+        <Breadcrumb style={{ marginBottom: 20 }}>
+          <BreadcrumbItem>
+            <Link to="/">Home</Link>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <Link to="">Application Center</Link>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <Link to="">Application List</Link>
+          </BreadcrumbItem>
+          <BreadcrumbItem>An Application</BreadcrumbItem>
+        </Breadcrumb>
         <Switch>
-          <Route exact path="/" component={HomePage} />
+          <Route exact path="/" component={SocialAccountListPage} />
+          <Route exact path="/socialAccount/:id" component={SocialAccountDetailPage} />
           <Route component={NotFoundPage} />
         </Switch>
       </Content>
-      <Footer></Footer>
-    </div>
+      <Footer>
+        @Copyright Nattaphat Laoharawee
+      </Footer>
+    </Layout>
   );
 }
