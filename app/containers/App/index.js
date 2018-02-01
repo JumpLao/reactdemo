@@ -39,13 +39,15 @@ export default function App() {
           <BreadcrumbItem>
             <Link to="/">Home</Link>
           </BreadcrumbItem>
-          <BreadcrumbItem>
-            <Link to="">Application Center</Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <Link to="">Application List</Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem>An Application</BreadcrumbItem>
+          {
+            //   <BreadcrumbItem>
+            //   <Link to="">Application Center</Link>
+            // </BreadcrumbItem>
+            // <BreadcrumbItem>
+            //   <Link to="">Application List</Link>
+            // </BreadcrumbItem>
+            // <BreadcrumbItem>An Application</BreadcrumbItem>
+          }
         </Breadcrumb>
         <Switch>
           <Route exact path="/" component={SocialAccountListPage} />
