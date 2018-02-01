@@ -41,11 +41,10 @@ export class SocialAccountListPage extends React.PureComponent { // eslint-disab
             <Link to={`/socialAccount/${socialAccount.name}`}>
               <Card
                 hoverable
-                cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
+                cover={<img alt={`${socialAccount.name} profile`} src={socialAccount.picture} />}
               >
                 <Meta
                   title={socialAccount.name}
-                  description="www.instagram.com"
                 />
               </Card>
             </Link>
