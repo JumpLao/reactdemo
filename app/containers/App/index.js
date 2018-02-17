@@ -13,51 +13,33 @@
 
 import React from 'react';
 import { Switch, Route, Link } from 'react-router-dom';
-import { Layout, Menu, Breadcrumb } from 'antd';
-import SocialAccountListPage from 'containers/SocialAccountListPage/Loadable';
-import SocialAccountDetailPage from 'containers/SocialAccountDetailPage/Loadable';
+import { NavBar, Icon, Flex } from 'antd-mobile';
+import ContactListPage from 'containers/ContactListPage/Loadable';
+import HomePage from 'containers/HomePage/Loadable';
+import FormPage from 'containers/FormPage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
-const { Header, Footer, Content } = Layout;
-const { Item: MenuItem } = Menu;
-const { Item: BreadcrumbItem } = Breadcrumb;
+const FlexItem = Flex.Item;
 export default function App() {
   return (
-    <Layout style={{ height: '100vh' }}>
-      <Header>
-        <div className="logo" />
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={['1']}
-          style={{ lineHeight: '64px' }}
-        >
-          <MenuItem key="1">Home</MenuItem>
-        </Menu>
-      </Header>
-      <Content style={{ padding: 20 }}>
-        <Breadcrumb style={{ marginBottom: 20 }}>
-          <BreadcrumbItem>
-            <Link to="/">Home</Link>
-          </BreadcrumbItem>
-          {
-            //   <BreadcrumbItem>
-            //   <Link to="">Application Center</Link>
-            // </BreadcrumbItem>
-            // <BreadcrumbItem>
-            //   <Link to="">Application List</Link>
-            // </BreadcrumbItem>
-            // <BreadcrumbItem>An Application</BreadcrumbItem>
-          }
-        </Breadcrumb>
-        <Switch>
-          <Route exact path="/" component={SocialAccountListPage} />
-          <Route exact path="/socialAccount/:id" component={SocialAccountDetailPage} />
-          <Route component={NotFoundPage} />
-        </Switch>
-      </Content>
-      <Footer>
-        @Copyright Nattaphat Laoharawee
-      </Footer>
-    </Layout>
+    <div style={{ height: '100vh' }}>
+      <NavBar
+        mode="dark"
+        leftContent={<Link to="/" style={{ color: 'white' }}>Back</Link>}
+        rightContent={[
+          <Icon key="0" type="search" style={{ marginRight: '16px' }} />,
+          <Icon key="1" type="ellipsis" />,
+        ]}
+      >Demo</NavBar>
+      <Flex>
+        <FlexItem>
+          <Switch>
+            <Route exact path="/" component={HomePage} />
+            <Route exact path="/register" component={FormPage} />
+            <Route exact path="/contact" component={ContactListPage} />
+            <Route component={NotFoundPage} />
+          </Switch>
+        </FlexItem>
+      </Flex>
+    </div>
   );
 }

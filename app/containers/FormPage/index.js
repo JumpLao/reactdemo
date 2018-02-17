@@ -7,29 +7,297 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
+import { List, InputItem, Switch, Stepper, Range, Button, DatePicker } from 'antd-mobile';
+import { createForm } from 'rc-form';
 
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
 import makeSelectFormPage from './selectors';
 import reducer from './reducer';
 import saga from './saga';
-import messages from './messages';
-
+const nowTimeStamp = Date.now();
+const now = new Date(nowTimeStamp);
+const utcOffset = new Date(now.getTime() - (now.getTimezoneOffset() * 60000));
+const Item = List.Item;
 export class FormPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+  state = {
+    value: 1,
+    dpValue: now,
+    idt: utcOffset.toISOString().slice(0, 10),
+  }
+  onSubmit = () => {
+    this.props.form.validateFields({ force: true }, (error) => {
+      if (!error) {
+        console.log(this.props.form.getFieldsValue());
+      } else {
+        alert('Validation failed');
+      }
+    });
+  }
+  onReset = () => {
+    this.props.form.resetFields();
+  }
+  validateIdp = (rule, date, callback) => {
+    if (isNaN(Date.parse(date))) {
+      callback(new Error('Invalid Date'));
+    } else {
+      const cDate = new Date(date);
+      const newDate = new Date(+this.state.dpValue);
+      newDate.setFullYear(cDate.getFullYear());
+      newDate.setMonth(cDate.getMonth());
+      newDate.setDate(cDate.getDate());
+      // this.setState({ dpValue: newDate });
+      setTimeout(() => this.props.form.setFieldsValue({ dp: newDate }), 10);
+      callback();
+    }
+  }
+  validateDatePicker = (rule, date, callback) => {
+    if (date && date.getMinutes() !== 15) {
+      callback();
+    } else {
+      callback(new Error('15 is invalid'));
+    }
+  }
+  validateAccount = (rule, value, callback) => {
+    if (value && value.length > 4) {
+      callback();
+    } else {
+      callback(new Error('At least four charactors for account'));
+    }
+  }
   render() {
+    const { getFieldProps, getFieldError } = this.props.form;
+
     return (
-      <div>
-        <FormattedMessage {...messages.header} />
-      </div>
+      <form>
+        <List
+          renderHeader={() => 'Form Validation'}
+          renderFooter={() => getFieldError('account') && getFieldError('account').join(',')}
+        >
+          <InputItem
+            placeholder="must be the format of YYYY-MM-DD"
+            error={!!getFieldError('idp')}
+            {...getFieldProps('idp', {
+              initialValue: this.state.idt,
+              rules: [
+                { validator: this.validateIdp },
+              ],
+            })}
+          >Input date</InputItem>
+          <DatePicker
+            {...getFieldProps('dp', {
+              initialValue: this.state.dpValue,
+              rules: [
+                { required: true, message: 'Must select a date' },
+                { validator: this.validateDatePicker },
+              ],
+            })}
+          >
+            <Item arrow="horizontal">Date</Item>
+          </DatePicker>
+          <Item>
+            <Button type="primary" size="small" inline onClick={this.onSubmit}>Submit</Button>
+            <Button size="small" inline style={{ marginLeft: '2.5px' }} onClick={this.onReset}>Reset</Button>
+          </Item>
+          <InputItem
+            {...getFieldProps('account', {
+              // initialValue: 'little ant',
+              rules: [
+                { required: true, message: 'Please input account' },
+                { validator: this.validateAccount },
+              ],
+            })}
+            clear
+            error={!!getFieldError('account')}
+            onErrorClick={() => {
+              alert(getFieldError('account').join('、'));
+            }}
+            placeholder="please input account"
+          >Account</InputItem>
+          <InputItem {...getFieldProps('password')} placeholder="please input password" type="password">
+            Password
+          </InputItem>
+          <Item
+            extra={<Switch {...getFieldProps('1', { initialValue: true, valuePropName: 'checked' })} />}
+          >Confirm Infomation</Item>
+          <Item><div style={{ padding: 7 }}><Range defaultValue={[20, 80]} /></div></Item>
+          <Item extra={<Stepper style={{ width: '100%', minWidth: '100px' }} showNumber size="small" defaultValue={20} />}>Number of Subscribers</Item>
+          <InputItem
+            {...getFieldProps('account', {
+              // initialValue: 'little ant',
+              rules: [
+                { required: true, message: 'Please input account' },
+                { validator: this.validateAccount },
+              ],
+            })}
+            clear
+            error={!!getFieldError('account')}
+            onErrorClick={() => {
+              alert(getFieldError('account').join('、'));
+            }}
+            placeholder="please input account"
+          >Account</InputItem>
+          <InputItem {...getFieldProps('password')} placeholder="please input password" type="password">
+            Password
+          </InputItem>
+          <Item
+            extra={<Switch {...getFieldProps('1', { initialValue: true, valuePropName: 'checked' })} />}
+          >Confirm Infomation</Item>
+          <Item><div style={{ padding: 7 }}><Range defaultValue={[20, 80]} /></div></Item>
+          <Item extra={<Stepper style={{ width: '100%', minWidth: '100px' }} showNumber size="small" defaultValue={20} />}>Number of Subscribers</Item>
+          <InputItem
+            {...getFieldProps('account', {
+              // initialValue: 'little ant',
+              rules: [
+                { required: true, message: 'Please input account' },
+                { validator: this.validateAccount },
+              ],
+            })}
+            clear
+            error={!!getFieldError('account')}
+            onErrorClick={() => {
+              alert(getFieldError('account').join('、'));
+            }}
+            placeholder="please input account"
+          >Account</InputItem>
+          <InputItem {...getFieldProps('password')} placeholder="please input password" type="password">
+            Password
+          </InputItem>
+          <Item
+            extra={<Switch {...getFieldProps('1', { initialValue: true, valuePropName: 'checked' })} />}
+          >Confirm Infomation</Item>
+          <Item><div style={{ padding: 7 }}><Range defaultValue={[20, 80]} /></div></Item>
+          <Item extra={<Stepper style={{ width: '100%', minWidth: '100px' }} showNumber size="small" defaultValue={20} />}>Number of Subscribers</Item>
+          <InputItem
+            {...getFieldProps('account', {
+              // initialValue: 'little ant',
+              rules: [
+                { required: true, message: 'Please input account' },
+                { validator: this.validateAccount },
+              ],
+            })}
+            clear
+            error={!!getFieldError('account')}
+            onErrorClick={() => {
+              alert(getFieldError('account').join('、'));
+            }}
+            placeholder="please input account"
+          >Account</InputItem>
+          <InputItem {...getFieldProps('password')} placeholder="please input password" type="password">
+            Password
+          </InputItem>
+          <Item
+            extra={<Switch {...getFieldProps('1', { initialValue: true, valuePropName: 'checked' })} />}
+          >Confirm Infomation</Item>
+          <Item><div style={{ padding: 7 }}><Range defaultValue={[20, 80]} /></div></Item>
+          <Item extra={<Stepper style={{ width: '100%', minWidth: '100px' }} showNumber size="small" defaultValue={20} />}>Number of Subscribers</Item>
+          <InputItem
+            {...getFieldProps('account', {
+              // initialValue: 'little ant',
+              rules: [
+                { required: true, message: 'Please input account' },
+                { validator: this.validateAccount },
+              ],
+            })}
+            clear
+            error={!!getFieldError('account')}
+            onErrorClick={() => {
+              alert(getFieldError('account').join('、'));
+            }}
+            placeholder="please input account"
+          >Account</InputItem>
+          <InputItem {...getFieldProps('password')} placeholder="please input password" type="password">
+            Password
+          </InputItem>
+          <Item
+            extra={<Switch {...getFieldProps('1', { initialValue: true, valuePropName: 'checked' })} />}
+          >Confirm Infomation</Item>
+          <Item><div style={{ padding: 7 }}><Range defaultValue={[20, 80]} /></div></Item>
+          <Item extra={<Stepper style={{ width: '100%', minWidth: '100px' }} showNumber size="small" defaultValue={20} />}>Number of Subscribers</Item>
+          <InputItem
+            {...getFieldProps('account', {
+              // initialValue: 'little ant',
+              rules: [
+                { required: true, message: 'Please input account' },
+                { validator: this.validateAccount },
+              ],
+            })}
+            clear
+            error={!!getFieldError('account')}
+            onErrorClick={() => {
+              alert(getFieldError('account').join('、'));
+            }}
+            placeholder="please input account"
+          >Account</InputItem>
+          <InputItem {...getFieldProps('password')} placeholder="please input password" type="password">
+            Password
+          </InputItem>
+          <Item
+            extra={<Switch {...getFieldProps('1', { initialValue: true, valuePropName: 'checked' })} />}
+          >Confirm Infomation</Item>
+          <Item><div style={{ padding: 7 }}><Range defaultValue={[20, 80]} /></div></Item>
+          <Item extra={<Stepper style={{ width: '100%', minWidth: '100px' }} showNumber size="small" defaultValue={20} />}>Number of Subscribers</Item>
+          <InputItem
+            {...getFieldProps('account', {
+              // initialValue: 'little ant',
+              rules: [
+                { required: true, message: 'Please input account' },
+                { validator: this.validateAccount },
+              ],
+            })}
+            clear
+            error={!!getFieldError('account')}
+            onErrorClick={() => {
+              alert(getFieldError('account').join('、'));
+            }}
+            placeholder="please input account"
+          >Account</InputItem>
+          <InputItem {...getFieldProps('password')} placeholder="please input password" type="password">
+            Password
+          </InputItem>
+          <Item
+            extra={<Switch {...getFieldProps('1', { initialValue: true, valuePropName: 'checked' })} />}
+          >Confirm Infomation</Item>
+          <Item><div style={{ padding: 7 }}><Range defaultValue={[20, 80]} /></div></Item>
+          <Item extra={<Stepper style={{ width: '100%', minWidth: '100px' }} showNumber size="small" defaultValue={20} />}>Number of Subscribers</Item>
+          <InputItem
+            {...getFieldProps('account', {
+              // initialValue: 'little ant',
+              rules: [
+                { required: true, message: 'Please input account' },
+                { validator: this.validateAccount },
+              ],
+            })}
+            clear
+            error={!!getFieldError('account')}
+            onErrorClick={() => {
+              alert(getFieldError('account').join('、'));
+            }}
+            placeholder="please input account"
+          >Account</InputItem>
+          <InputItem {...getFieldProps('password')} placeholder="please input password" type="password">
+            Password
+          </InputItem>
+          <Item
+            extra={<Switch {...getFieldProps('1', { initialValue: true, valuePropName: 'checked' })} />}
+          >Confirm Infomation</Item>
+          <Item><div style={{ padding: 7 }}><Range defaultValue={[20, 80]} /></div></Item>
+          <Item extra={<Stepper style={{ width: '100%', minWidth: '100px' }} showNumber size="small" defaultValue={20} />}>Number of Subscribers</Item>
+          <Item>
+            <Button type="primary" size="small" inline onClick={this.onSubmit}>Submit</Button>
+            <Button size="small" inline style={{ marginLeft: '2.5px' }} onClick={this.onReset}>Reset</Button>
+          </Item>
+        </List>
+      </form>
     );
   }
 }
 
 FormPage.propTypes = {
-  dispatch: PropTypes.func.isRequired,
+  // dispatch: PropTypes.func.isRequired,
+  form: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -51,4 +319,5 @@ export default compose(
   withReducer,
   withSaga,
   withConnect,
+  createForm(),
 )(FormPage);
